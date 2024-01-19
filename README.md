@@ -145,4 +145,4 @@ The MongoDB schema defines the structure of a product, including its name, compa
 
 ## Integration testing
 - Run the server using `nodemon index.js`
-- in a new terminal, run node `testing.js` to run the testing file.
+- in a new terminal, run `node testing.js` to run the testing file.
