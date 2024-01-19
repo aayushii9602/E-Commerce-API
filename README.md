@@ -142,3 +142,7 @@ MongoDB is chosen as the database for its flexibility and scalability, suitable 
 Node.js and Express are used for the backend, providing a fast and scalable server environment.
 - Schema:
 The MongoDB schema defines the structure of a product, including its name, company name, description, price, and variants.
+
+## Integration testing
+- Run the server using `nodemon index.js`
+- in a new terminal, run node `testing.js` to run the testing file.
