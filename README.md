@@ -21,6 +21,11 @@ nodemon index
 The project will start running, and you can access the API endpoints accordingly.
 
 ## how to interact with the API
+### instruction:
+-  Ensure that the server is up and running. Start the server by executing the appropriate command (`nodemon index`).
+-  Ensure that the MongoDB database is accessible and properly configured.
+- Verify the connection settings in the server code, particularly the MongoDB connection URL.
+- Be aware of the HTTP methods required for specific operations (e.g., POST for creating, GET for retrieving, DELETE for deleting).
 I've share dthe postman invitation, you can use that or
 ## Create Product
 
