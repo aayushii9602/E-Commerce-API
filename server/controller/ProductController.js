@@ -1,7 +1,6 @@
 // Importing the necessary middleware and models
 
 import bigPromise from '../middlewares/bigPromise.js'
-import User from '../models/user.js'
 import Product from '../models/product.js'
 
 // Create Product
@@ -243,12 +242,11 @@ export const searchProduct = bigPromise(async (req, res, next) => {
     // Responding with a 200 OK status and the retrieved products
     res.status(200).json({ success: true, products })
   } catch (error) {
-    // Handling unexpected errors (Note: The error is logged but not handled further)
-    console.error(`Error while retrieving products: ${error}`)
+    console.error(`Error while searching products: ${error}`)
     res.status(500).json({
       success: false,
       error: 'server error',
-      message: 'Error while retrieving products',
+      message: 'Error while searching products',
     })
   }
 })

@@ -3,8 +3,10 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
+// Defining the MongoDB connection URL using the provided environment variable or a default URL
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017/ecommerce'
 
+// Establishing a connection to the MongoDB database
 export const connectDB = mongoose
   .connect(MONGO_URL, {
     useNewUrlParser: true,

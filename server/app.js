@@ -1,9 +1,13 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-dotenv.config()
-const app = express()
 import cookieParser from 'cookie-parser'
+
+// Load environment variables from a .env file
+dotenv.config()
+
+// Create an instance of the Express application
+const app = express()
 
 //cookies and filemiddleware
 app.use(cookieParser())
