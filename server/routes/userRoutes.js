@@ -6,6 +6,7 @@ import {
   createProduct,
   deleteProduct,
   retrieveProduct,
+  searchProduct,
   updateProduct,
 } from '../controller/ProductController.js'
 
@@ -17,5 +18,6 @@ router.route('/createProduct').post(createProduct)
 router.route('/updateProduct/:id').put(updateProduct)
 router.route('/deleteProduct/:id').delete(deleteProduct)
 router.route('/retrieveProduct').get(retrieveProduct)
+router.route('/searchProduct/').get(searchProduct)
 
 export default router

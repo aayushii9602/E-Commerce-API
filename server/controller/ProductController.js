@@ -215,14 +215,16 @@ export const retrieveProduct = bigPromise(async (req, res, next) => {
 export const searchProduct = bigPromise(async (req, res, next) => {
   try {
     // Extracting the search query from the request parameters
-    const searchQuery = req.query.q
+    const nameQuery = req.query.name
+    console.log(nameQuery)
 
     // Defining a MongoDB query to search by product name, description, or variant name
     const searchConditions = {
       $or: [
-        { name: { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for product name
-        { description: { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for description
-        { 'variants.varName': { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for variant name
+        { name: { $regex: nameQuery, $options: 'i' } }, // Case-insensitive search for product name
+        { companyName: { $regex: nameQuery, $options: 'i' } },
+        { description: { $regex: nameQuery, $options: 'i' } }, // Case-insensitive search for description
+        { 'variants.varName': { $regex: nameQuery, $options: 'i' } }, // Case-insensitive search for variant name
       ],
     }
 
