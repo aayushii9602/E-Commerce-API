@@ -72,4 +72,181 @@ export const createProduct = bigPromise(async (req, res, next) => {
   }
 })
 
-//delete the details of the product based on
+// Controller function for updating a product
+export const updateProduct = bigPromise(async (req, res, next) => {
+  try {
+    //check if the product exist with the provided id
+    const productToUpdate = await Product.findById(req.params.id)
+    if (!productToUpdate) {
+      return res.status(400).json({
+        success: false,
+        message: 'no such product found with the given id',
+      })
+    }
+    // Destructuring request body to extract relevant information
+    const { name, companyName, description, price, variants } = req.body
+
+    // Checking if essential fields are provided in the request body
+    if (!name || !companyName || !description || !price) {
+      // Responding with a 400 Bad Request if required fields are missing
+      res.status(400).json({
+        success: false,
+        error: 'bad request',
+        message: 'Enter all the required fields',
+      })
+    }
+
+    // Constructing a new product object based on the request body
+    var newProduct
+    if (variants) {
+      newProduct = {
+        name: req.body.name,
+        companyName: companyName,
+        description: description,
+        price: price,
+        variants: variants,
+      }
+    } else {
+      newProduct = {
+        name: req.body.name,
+        companyName: companyName,
+        description: description,
+        price: price,
+      }
+    }
+
+    // Logging the id received from the route parameters
+    console.log(req.params.id)
+
+    // Updating the product in the database using findByIdAndUpdate
+    const product = await Product.findByIdAndUpdate(req.params.id, newProduct, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    })
+
+    // Responding with a 200 OK status and the updated product information
+    res.status(200).json({
+      success: true,
+      message: 'Updated successfully!',
+      data: newProduct,
+    })
+  } catch (error) {
+    // Logging any errors that occur during the update process
+    console.log(`Error while updating a product: ${error}`)
+
+    // Handling unexpected errors and responding with a 500 Internal Server Error
+    return res.status(500).json({
+      success: false,
+      error: 'server error',
+      message: 'Error while updating a product',
+    })
+  }
+})
+
+// Controller function for deleting a product based on product id
+export const deleteProduct = bigPromise(async (req, res, next) => {
+  try {
+    // Finding the product to delete based on the provided id in the route parameters
+    const productToDelete = await Product.findById(req.params.id)
+
+    // Logging the product to be deleted (for debugging purposes)
+    console.log(productToDelete)
+
+    // Checking if the product exists
+    if (!productToDelete) {
+      // Responding with a 401 Unauthorized status if the product does not exist
+      return res
+        .status(401)
+        .json({ success: false, message: 'No such product found with this id' })
+    }
+
+    // Deleting the product from the database using deleteOne
+    await productToDelete.deleteOne()
+
+    // Responding with a 200 OK status and a success message
+    res.status(200).json({
+      success: true,
+      message: 'Product deleted successfully',
+    })
+  } catch (error) {
+    // Logging any errors that occur during the delete process
+    console.log(`Error while deleting a product: ${error}`)
+
+    // Handling unexpected errors and responding with a 500 Internal Server Error
+    return res.status(500).json({
+      success: false,
+      error: 'server error',
+      message: 'Error while deleting a product',
+    })
+  }
+})
+
+// Controller function for retrieving all products
+export const retrieveProduct = bigPromise(async (req, res, next) => {
+  try {
+    // Retrieving all products from the database
+    const product = await Product.find()
+
+    // Checking if any products were found
+    if (!product) {
+      // Responding with a 401 Unauthorized status if no products exist
+      res.status(401).json({
+        success: false,
+        message: 'No products exist',
+      })
+    }
+
+    // Responding with a 200 OK status and the retrieved products
+    res.status(200).json({ success: true, product })
+  } catch (error) {
+    console.error(`Error while retrieving products: ${error}
+    `)
+    // Handling unexpected errors and responding with a 500 Internal Server Error
+    return res.status(500).json({
+      success: false,
+      error: 'server error',
+      message: 'Error while retrieving a product',
+    })
+  }
+})
+
+// Controller function for retrieving products with search functionality
+export const searchProduct = bigPromise(async (req, res, next) => {
+  try {
+    // Extracting the search query from the request parameters
+    const searchQuery = req.query.q
+
+    // Defining a MongoDB query to search by product name, description, or variant name
+    const searchConditions = {
+      $or: [
+        { name: { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for product name
+        { description: { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for description
+        { 'variants.varName': { $regex: searchQuery, $options: 'i' } }, // Case-insensitive search for variant name
+      ],
+    }
+
+    // Retrieving products based on the search query
+    const products = await Product.find(searchConditions)
+
+    // Checking if any products were found
+    if (!products || products.length === 0) {
+      // Responding with a 404 Not Found status if no matching products exist
+      return res.status(404).json({
+        success: false,
+        message: 'No products found matching the search criteria',
+      })
+    }
+
+    // Responding with a 200 OK status and the retrieved products
+    res.status(200).json({ success: true, products })
+  } catch (error) {
+    // Handling unexpected errors (Note: The error is logged but not handled further)
+    console.error(`Error while retrieving products: ${error}`)
+    res.status(500).json({
+      success: false,
+      error: 'server error',
+      message: 'Error while retrieving products',
+    })
+  }
+})
